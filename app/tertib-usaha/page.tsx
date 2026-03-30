@@ -365,7 +365,7 @@ export default function RekapBujkPage() {
                       return (
                         <tr
                           key={r.id}
-                          className="odd:bg-white even:bg-slate-50 hover:bg-blue-50 transition">
+                          className="odd:bg-white even:bg-slate-50 hover:bg-blue-50 transition ">
                           <Td>{r.no ?? '-'}</Td>
                           <Td>{r.nib}</Td>
                           <Td>{r.nama_badan_usaha}</Td>
