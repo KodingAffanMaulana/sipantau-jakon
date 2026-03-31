@@ -126,7 +126,11 @@ export default function TambahPenyelenggaraanTahunanPage() {
   }
 
   if (role === null) {
-    return <div className="min-h-screen bg-slate-100 p-6">Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-slate-600">Loading...</p>
+      </div>
+    );
   }
 
   return (

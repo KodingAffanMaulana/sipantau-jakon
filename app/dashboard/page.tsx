@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import LogoutButton from '@/components/LogoutButton';
+import Image from 'next/image';
 
 type Role = 'admin' | 'user' | null;
 
@@ -35,25 +36,44 @@ export default function DashboardPage() {
     })();
   }, [router]);
 
-  if (!email) return <p className="p-6">Loading...</p>;
+  if (!email)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-slate-600">Loading...</p>
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-orange-100">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-amber-100 to-orange-200 relative overflow-hidden">
       {/* Topbar */}
-      <header className="border-b bg-orange-500">
+
+      <header className="border-b bg-gradient-to-r from-orange-500 to-amber-500">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div>
-            <h1 className="text-lg font-bold text-white">SIPANTAU JAKON</h1>
-            <p className="text-sm text-slate-100">Dashboard Monitoring</p>
+          {/* LEFT: Logo + Title */}
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="Logo Bina Marga"
+              width={120}
+              height={120}
+              className="object-contain"
+              priority
+            />
+            <div>
+              <h1 className="text-lg font-bold text-white leading-tight">SIPANTAU JAKON</h1>
+              <p className="text-xs text-orange-100">Dashboard Monitoring</p>
+            </div>
           </div>
 
+          {/* RIGHT */}
           <div className="flex items-center gap-3">
-            <span className="hidden sm:inline-flex rounded-full border bg-slate-50 px-3 py-1 text-sm text-slate-700">
+            <span className="hidden sm:inline-flex rounded-full border bg-white/90 px-3 py-1 text-sm text-slate-700">
               {email}
             </span>
 
-            <span className="inline-flex rounded-full border bg-white px-3 py-1 text-sm text-slate-700">
-              Role: <span className="ml-1 font-semibold text-slate-900">{role ?? '-'}</span>
+            <span className="inline-flex rounded-full border bg-white px-4 py-1 text-sm text-slate-700">
+              Role:
+              <span className="ml-1 font-semibold text-slate-900">{role ?? '-'}</span>
             </span>
 
             <LogoutButton />
@@ -85,7 +105,7 @@ export default function DashboardPage() {
           {/* Menu cards */}
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <MenuCard
-              title="Tertib Usaha"
+              title="Tertib Usaha Jasa Konstruksi"
               desc="Rekapitulasi Pengawasan Tertib Usaha Jasa Konstruksi (BUJK)"
               href="/tertib-usaha"
               tag="Rekap Tahunan"
@@ -93,7 +113,7 @@ export default function DashboardPage() {
             />
 
             <MenuCard
-              title="Tertib Penyelenggaraan"
+              title="Tertib Penyelenggaraan Jasa Konstruksi"
               desc="Rekapitulasi Pengawasan Tertib Penyelenggaraan Jasa Konstruksi (Tahunan)"
               href="/penyelenggaraan-tahunan"
               tag="Rekap Tahunan"
@@ -101,7 +121,7 @@ export default function DashboardPage() {
             />
 
             <MenuCard
-              title="Tertib Pemanfaatan"
+              title="Tertib Pemanfaatan Produk Jasa Konstruksi"
               desc="Modul berikutnya (akan dibuat setelah 2 modul di atas stabil)"
               href="/pemanfaatan"
               tag="Rekap Tahunan"
@@ -162,7 +182,7 @@ function MenuCard({
         : 'from-slate-600 to-slate-500';
 
   const cardBase =
-    'group relative overflow-hidden rounded-2xl border bg-white p-5 shadow-sm transition';
+    'group relative overflow-hidden rounded-2xl border bg-white p-5 shadow-sm transition hover:bg-amber-50';
 
   const interactive = disabled
     ? 'opacity-60 cursor-not-allowed'
@@ -171,10 +191,10 @@ function MenuCard({
   const content = (
     <div className={`${cardBase} ${interactive}`}>
       <div
-        className={`absolute right-0 top-0 h-24 w-24 rounded-bl-[40px] bg-gradient-to-br ${accentCls} opacity-15`}
+        className={`absolute right-0 top-0 h-24 w-24 rounded-bl-[40px] bg-gradient-to-br ${accentCls} opacity-15 `}
       />
 
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 ">
         <div>
           <p className="text-sm text-slate-600">Pengawasan</p>
           <h3 className="mt-1 text-base font-bold text-slate-900">{title}</h3>

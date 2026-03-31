@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
+import LogoutButton from '@/components/LogoutButton';
 
 type Status = 'tertib' | 'belum_tertib' | null;
 
@@ -186,9 +187,14 @@ export default function TertibPemanfaatanPage() {
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-7">
-        <Link href="/dashboard" className="text-sm text-blue-700 hover:underline">
-          ← Kembali ke Dashboard
-        </Link>
+        <div className="flex items-center justify-between bg-blue-200 p-2 rounded-2xl mb-5">
+          <Link
+            href="/dashboard"
+            className="text-sm flex items-center text-white hover:underline p-2  px-4 bg-blue-500 rounded-xl hover:bg-blue-400">
+            ← Kembali ke Dashboard
+          </Link>
+          <LogoutButton />
+        </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Tertib Pemanfaatan</h1>
