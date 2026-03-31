@@ -230,9 +230,11 @@ export default function RekapPenyelenggaraanTahunanPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">
-              Rekapitulasi Pengawasan Tertib Penyelenggaraan Jasa Konstruksi Tahunan
+              Tertib Penyelenggaraan Jasa Konstruksi Tahunan
             </h1>
-            <p className="text-sm text-slate-600">Search + Filter + Export + Delete (admin).</p>
+            <p className="text-sm text-slate-600">
+              Rekapitulasi Pengawasan Tertib Penyelenggaraan Jasa Konstruksi Tahunan
+            </p>
           </div>
 
           <div className="flex items-center gap-3">

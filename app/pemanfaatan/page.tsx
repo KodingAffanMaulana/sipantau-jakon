@@ -197,9 +197,12 @@ export default function TertibPemanfaatanPage() {
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Tertib Pemanfaatan</h1>
+            <h1 className="text-2xl font-bold text-slate-900">
+              {' '}
+              Tertib Pemanfaatan Produk Jasa Konstruksi
+            </h1>
             <p className="text-sm text-slate-600">
-              Rekapitulasi pengawasan pemanfaatan produk konstruksi.
+              Rekapitulasi Pengawasan Pemanfaatan Produk Jasa Konstruksi
             </p>
           </div>
 
