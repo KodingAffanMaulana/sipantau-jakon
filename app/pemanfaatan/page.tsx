@@ -120,9 +120,27 @@ export default function TertibPemanfaatanPage() {
   }, [rows, filter]);
 
   const stats = useMemo(() => {
-    const total = rows.length;
-    const tertib = rows.filter((r) => overallStatus(r) === 'tertib').length;
-    return { total, tertib, belum: total - tertib };
+    const allFields = rows.flatMap((r) => [
+      r.kesesuaian_fungsi,
+      r.kesesuaian_lokasi,
+      r.rencana_umur_konstruksi,
+      r.kapasitas_dan_beban,
+      r.pemeliharaan_bangunan,
+      r.program_pemeliharaan,
+    ]);
+
+    const total = allFields.length;
+
+    const tertib = allFields.filter((f) => f === 'tertib').length;
+    const belum = allFields.filter((f) => f === 'belum_tertib').length;
+
+    return {
+      total,
+      tertib,
+      belum,
+      persenTertib: total ? Math.round((tertib / total) * 100) : 0,
+      persenBelum: total ? Math.round((belum / total) * 100) : 0,
+    };
   }, [rows]);
 
   async function exportExcel() {
@@ -242,7 +260,7 @@ export default function TertibPemanfaatanPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-4 shadow-sm">
+          {/* <div className="rounded-2xl border bg-white p-4 shadow-sm">
             <div className="text-sm font-semibold text-slate-900">Filter Status Keseluruhan</div>
             <p className="text-xs text-slate-600 mt-1">
               Belum tertib jika ada minimal 1 kolom belum tertib.
@@ -265,8 +283,49 @@ export default function TertibPemanfaatanPage() {
               <StatBox label="Tertib" value={stats.tertib} />
               <StatBox label="Belum" value={stats.belum} />
             </div>
-          </div>
+          </div> */}
+          <div className="rounded-2xl border bg-white p-4 shadow-sm">
+            <div className="text-sm font-semibold text-slate-900">Ringkasan Kepatuhan</div>
+            <p className="text-xs text-slate-600 mt-1">
+              Persentase dihitung berdasarkan seluruh aspek penilaian (bukan per BUJK).
+            </p>
 
+            <div className="mt-4 space-y-3">
+              {/* TERTIB */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-600">Tertib</span>
+                  <span className="font-semibold">{stats.persenTertib}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: `${stats.persenTertib}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* BELUM */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-600">Belum Terpenuhi</span>
+                  <span className="font-semibold">{stats.persenBelum}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full">
+                  <div
+                    className="h-full bg-rose-500 rounded-full"
+                    style={{ width: `${stats.persenBelum}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+              <StatBox label="Total Aspek" value={stats.total} />
+              <StatBox label="Tertib" value={stats.tertib} />
+              <StatBox label="Belum" value={stats.belum} />
+            </div>
+          </div>
           <div className="rounded-2xl border bg-white p-4 shadow-sm">
             <div className="text-sm font-semibold text-slate-900">Export</div>
             <p className="text-xs text-slate-600 mt-1">
@@ -312,7 +371,7 @@ export default function TertibPemanfaatanPage() {
 
                   <Th colSpan={2}>Pemeliharaan produk konstruksi</Th>
 
-                  <Th rowSpan={2}>Status</Th>
+                  {/* <Th rowSpan={2}>Status</Th> */}
                   <Th rowSpan={2}>Aksi</Th>
                 </tr>
 
@@ -357,7 +416,7 @@ export default function TertibPemanfaatanPage() {
                           <TdBadge value={r.pemeliharaan_bangunan} />
                           <TdBadge value={r.program_pemeliharaan} />
 
-                          <Td>
+                          {/* <Td>
                             <span
                               className={[
                                 'inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold',
@@ -367,7 +426,7 @@ export default function TertibPemanfaatanPage() {
                               ].join(' ')}>
                               {ov === 'tertib' ? 'Tertib' : 'Belum Tertib'}
                             </span>
-                          </Td>
+                          </Td> */}
 
                           <Td>
                             {role === 'admin' ? (

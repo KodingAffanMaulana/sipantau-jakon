@@ -132,9 +132,35 @@ export default function RekapPenyelenggaraanTahunanPage() {
   }, [rows, filter]);
 
   const stats = useMemo(() => {
-    const total = rows.length;
-    const tertib = rows.filter((r) => overallStatus(r) === 'tertib').length;
-    return { total, tertib, belum: total - tertib };
+    const allFields = rows.flatMap((r) => [
+      r.penerapan_smm_konstruksi,
+      r.pemenuhan_penyediaan_peralatan,
+      r.penggunaan_material_standar,
+      r.penggunaan_produk_dalam_negeri,
+      r.pemenuhan_standar_mutu_material,
+      r.pemenuhan_standar_teknis_lingkungan,
+      r.pemenuhan_standar_k3,
+      r.proses_pemilihan_penyedia,
+      r.penerapan_standar_kontrak,
+      r.penggunaan_tenaga_kerja_bersertifikat,
+      r.pemberian_pekerjaan_ke_subpenyedia,
+      r.ketersediaan_dokumen_k4,
+      r.penerapan_smkk,
+      r.kegiatan_antisipasi_kecelakaan,
+    ]);
+
+    const total = allFields.length;
+
+    const tertib = allFields.filter((f) => f === 'tertib').length;
+    const belum = allFields.filter((f) => f === 'belum_tertib').length;
+
+    return {
+      total,
+      tertib,
+      belum,
+      persenTertib: total ? Math.round((tertib / total) * 100) : 0,
+      persenBelum: total ? Math.round((belum / total) * 100) : 0,
+    };
   }, [rows]);
 
   async function exportExcel() {
@@ -272,7 +298,7 @@ export default function RekapPenyelenggaraanTahunanPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-4 shadow-sm">
+          {/* <div className="rounded-2xl border bg-white p-4 shadow-sm">
             <div className="text-sm font-semibold text-slate-900">Filter Status Keseluruhan</div>
             <p className="mt-1 text-xs text-slate-600">
               Tidak tertib jika ada minimal 1 kolom tidak tertib.
@@ -292,6 +318,48 @@ export default function RekapPenyelenggaraanTahunanPage() {
 
             <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
               <StatBox label="Total" value={stats.total} />
+              <StatBox label="Tertib" value={stats.tertib} />
+              <StatBox label="Belum" value={stats.belum} />
+            </div>
+          </div> */}
+          <div className="rounded-2xl border bg-white p-4 shadow-sm">
+            <div className="text-sm font-semibold text-slate-900">Ringkasan Kepatuhan</div>
+            <p className="text-xs text-slate-600 mt-1">
+              Persentase dihitung berdasarkan seluruh aspek penilaian (bukan per BUJK).
+            </p>
+
+            <div className="mt-4 space-y-3">
+              {/* TERTIB */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-600">Tertib</span>
+                  <span className="font-semibold">{stats.persenTertib}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: `${stats.persenTertib}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* BELUM */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-600">Belum Terpenuhi</span>
+                  <span className="font-semibold">{stats.persenBelum}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full">
+                  <div
+                    className="h-full bg-rose-500 rounded-full"
+                    style={{ width: `${stats.persenBelum}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+              <StatBox label="Total Aspek" value={stats.total} />
               <StatBox label="Tertib" value={stats.tertib} />
               <StatBox label="Belum" value={stats.belum} />
             </div>

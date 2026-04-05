@@ -132,10 +132,34 @@ export default function RekapBujkPage() {
   }, [rows, filter]);
 
   const stats = useMemo(() => {
-    const total = rows.length;
-    const tertib = rows.filter((r) => overallStatus(r) === 'tertib').length;
-    const belum = total - tertib;
-    return { total, tertib, belum };
+    const allFields = rows.flatMap((r) => [
+      r.jenis,
+      r.sifat,
+      r.klasifikasi,
+      r.layanan,
+      r.bentuk,
+      r.kualifikasi,
+      r.sbu,
+      r.nib_persyaratan,
+      r.peningkatan_kapasitas_sdm,
+      r.peningkatan_peralatan,
+      r.peningkatan_teknologi,
+      r.peningkatan_kualitas_keuangan,
+      r.peningkatan_manajemen_usaha,
+    ]);
+
+    const total = allFields.length;
+
+    const tertib = allFields.filter((f) => f === 'tertib').length;
+    const belum = allFields.filter((f) => f === 'belum_tertib').length;
+
+    return {
+      total,
+      tertib,
+      belum,
+      persenTertib: total ? Math.round((tertib / total) * 100) : 0,
+      persenBelum: total ? Math.round((belum / total) * 100) : 0,
+    };
   }, [rows]);
 
   async function exportExcel() {
@@ -267,27 +291,43 @@ export default function RekapBujkPage() {
           </div>
 
           <div className="rounded-2xl border bg-white p-4 shadow-sm">
-            <div className="text-sm font-semibold text-slate-900">Filter Status Keseluruhan</div>
+            <div className="text-sm font-semibold text-slate-900">Ringkasan Kepatuhan</div>
             <p className="text-xs text-slate-600 mt-1">
-              Status keseluruhan = <b>Belum Tertib</b> jika ada minimal 1 kolom belum tertib.
+              Persentase dihitung berdasarkan seluruh aspek penilaian (bukan per BUJK).
             </p>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              <FilterPill active={filter === 'all'} onClick={() => setFilter('all')}>
-                Semua
-              </FilterPill>
-              <FilterPill active={filter === 'tertib'} onClick={() => setFilter('tertib')}>
-                Tertib
-              </FilterPill>
-              <FilterPill
-                active={filter === 'belum_tertib'}
-                onClick={() => setFilter('belum_tertib')}>
-                Belum Tertib
-              </FilterPill>
+            <div className="mt-4 space-y-3">
+              {/* TERTIB */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-600">Tertib</span>
+                  <span className="font-semibold">{stats.persenTertib}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: `${stats.persenTertib}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* BELUM */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-600">Belum Terpenuhi</span>
+                  <span className="font-semibold">{stats.persenBelum}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full">
+                  <div
+                    className="h-full bg-rose-500 rounded-full"
+                    style={{ width: `${stats.persenBelum}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
-              <StatBox label="Total" value={stats.total} />
+              <StatBox label="Total Aspek" value={stats.total} />
               <StatBox label="Tertib" value={stats.tertib} />
               <StatBox label="Belum" value={stats.belum} />
             </div>
@@ -333,7 +373,7 @@ export default function RekapBujkPage() {
                   <Th colSpan={2}>Pemenuhan Persyaratan Usaha</Th>
                   <Th colSpan={5}>Pengembangan usaha berkelanjutan</Th>
 
-                  <Th rowSpan={2}>Status</Th>
+                  {/* <Th rowSpan={2}>Status</Th> */}
                   <Th rowSpan={2}>Aksi</Th>
                 </tr>
 
@@ -394,7 +434,7 @@ export default function RekapBujkPage() {
                           <TdBadge value={r.peningkatan_kualitas_keuangan} />
                           <TdBadge value={r.peningkatan_manajemen_usaha} />
 
-                          <Td>
+                          {/* <Td>
                             <span
                               className={[
                                 'inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold',
@@ -404,7 +444,7 @@ export default function RekapBujkPage() {
                               ].join(' ')}>
                               {ov === 'tertib' ? 'Tertib' : 'Belum Tertib'}
                             </span>
-                          </Td>
+                          </Td> */}
 
                           <Td>
                             {role === 'admin' ? (
